@@ -1,0 +1,40 @@
+resources:
+- name: source
+  type: git
+  source:
+    username: MarosBenadik
+    password: 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
+    uri: https://github.com/MarosBenadik/concourse.git
+    branch: main
+- name: c-000
+  type: git
+  source:
+    uri: https://github.com/MarosBenadik/c-000.git
+    branch: master
+- name: d-0001
+  type: git
+  source:
+    uri: https://github.com/MarosBenadik/d-001.git
+    branch: 
+
+jobs:
+- name: start-step
+  old_name: StartAll
+  plan:
+  - get: source
+  - task: run main.py
+    file: source/main.py
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source: {repository: busybox}
+      run:
+        path: bash
+        args:
+          - -c
+          - |
+            pwd
+            ls -a
+            echo "triggering jobs in pipeline: "
+
