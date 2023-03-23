@@ -3,7 +3,7 @@ resources:
     type: git
     source:
       username: MarosBenadik
-      password: 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
+      password: ((git-token))
       uri: https://github.com/MarosBenadik/git-repo-pipeline.git
       branch: main
 jobs:
