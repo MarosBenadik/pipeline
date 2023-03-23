@@ -40,8 +40,8 @@ jobs:
                 touch file.txt
                 now=$(date +"%T")
                 echo "Current time : $now" > file.txt
-                git config --global user.email "mbenadik25@gmail.com"
-                git config --global user.name "MarosBenadik"
+                git config --global user.email "example@example.com"
+                git config --global user.name "example"
                 git add .
                 git commit -m "first push"
       - put: push-to-repo
