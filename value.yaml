@@ -1,40 +1,52 @@
 resources:
-- name: source
-  type: git
-  source:
-    username: MarosBenadik
-    password: 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
-    uri: https://github.com/MarosBenadik/concourse.git
-    branch: main
-- name: c-000
-  type: git
-  source:
-    uri: https://github.com/MarosBenadik/c-000.git
-    branch: master
-- name: d-0001
-  type: git
-  source:
-    uri: https://github.com/MarosBenadik/d-001.git
-    branch: 
-
+  - name: repository
+    type: git
+    source:
+      username: MarosBenadik
+      password: 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
+      uri: https://github.com/MarosBenadik/git-repo-pipeline.git
+      branch: main
 jobs:
-- name: start-step
-  old_name: StartAll
-  plan:
-  - get: source
-  - task: run main.py
-    file: source/main.py
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source: {repository: busybox}
-      run:
-        path: bash
-        args:
-          - -c
-          - |
-            pwd
-            ls -a
-            echo "triggering jobs in pipeline: "
+  - name: git-commit
+    public: true
+    plan:
+      - get: repository
+      - task: commit-file
+        privileged: true
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              email: mbenadik25@gmail.com
+              username: marosbe
+              password: ((docker-password))
+              repository: marosbe/alpine
+              tag: v1
+          inputs:
+          - name: repository
+          outputs:
+          - name: repository
+          run:
+            path: sh
+            args:
+              - -ec
+              - |
+                ls -la
+                apk update
+                apk add git
+                cd repository
+                ls -la
+                touch file.txt
+                now=$(date +"%T")
+                echo "Current time : $now" > file.txt
+                git config --global user.email "mbenadik25@gmail.com"
+                git config --global user.name "MarosBenadik"
+                git add .
+                git commit -m "first push"
+      - put: push-to-repo
+        resource: repository
+        params:
+          repository: repository
+
 
